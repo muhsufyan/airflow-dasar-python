@@ -1,11 +1,7 @@
 # langkah
-1. buat virtual environment
-2. masuk kedalam virtual environment
-3. sblm install airflow cek dulu versi python
-4. install menggunakan pypi, ada 2 cara menginstall => https://pypi.org/project/apache-airflow/. <br> ubah versi python sesuai dg versi python kita
-5. set ke path environment
-6. inisialisasi db
-7. buat dulu account
-8. run webserver airflow
-9. buka terminal lainnya, make sure airflow tlh di export, jalankan scheduler
+lihat https://airflow.apache.org/docs/apache-airflow/stable/start/index.html pilih docker<br>
+* copy /download file docker-compose.yaml nya, karena kita memakai windows jd kita copas saja https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml
+* karena beberapa hal maka file docker-compose.yaml kita hapus (comment), bagian mana yg diubah dan dihapus bisa lihat di file nya
 ## sumber https://www.youtube.com/watch?v=K9AnJ9_ZAXE
+
+### sblmnya dg pypi gagal silahkan baca ini https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html# & https://airflow.apache.org/docs/apache-airflow/stable/start/local.html
