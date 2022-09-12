@@ -9,3 +9,6 @@
 8. run webserver airflow
 9. buka terminal lainnya, make sure airflow tlh di export, jalankan scheduler
 ## sumber https://www.youtube.com/watch?v=K9AnJ9_ZAXE
+### ini yg sukses, yg gagal file yg ada hanya README.md, command.sh, .gitignore
+### ini run & success di linux
+<!-- uninstall all package with pip => pip freeze | xargs pip uninstall -y -->

@@ -10,6 +10,9 @@ python -m venv env
 # update dulu
 pip install --upgrade pip
 
+pip install wheel
+
+
 # step 3)
 python --version
 # step 4 install with pypi
@@ -19,7 +22,7 @@ pip install 'apache-airflow==2.3.4' \
 # dalam 1 baris
 pip install 'apache-airflow==2.3.4' --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.3.4/constraints-{versi python kita}.txt"
 # versi python kita 3.10.4 so 
-pip install 'apache-airflow==2.3.4' --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.3.4/constraints-3.10.txt"
+pip install 'apache-airflow==2.3.4' --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.3.4/constraints-3.8.txt"
 #  if error caused pip not found
 python -m ensurepip
 # NOTE JIKA ERROR GUNAKAN CARA SELANJUTNYA YAITU LEWAT DOCKER
@@ -27,6 +30,8 @@ python -m ensurepip
 # step 5) set ke environment variable
 # linux/mac
 export AIRFLOW_HOME=.
+# if error when airflow db init use this command 
+export AIRFLOW_HOME=~/airflow
 # windows
 SET AIRFLOW_HOME=.
 
