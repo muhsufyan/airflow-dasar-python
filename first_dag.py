@@ -26,8 +26,14 @@ with DAG(
     # kita buat simple dag menggunakan BashOperator (untuk mengeksekusi perintah bash).
     # task yg akan dilakukan adlh print out tulisan hello world with BashOperator
     task1 = BashOperator(
-        task_id = "first_task",
+        task_id = "first_task_v2",
         bash_command="echo hello world with BashOperator"
     )
-    # run task
-    task1
+    # buat task 2 yg operator nya adlh BashOperator
+    task2 = BashOperator(
+        task_id='task_2',
+        bash_command="i am execute/running after task 1 complete"
+    )
+    # run task (task dependencies)
+    # task2 running after task1 finish
+    task1.set_downstream(task2)
