@@ -8,18 +8,17 @@ param = {
 }
 
 
-# func ini akan running oleh dag task operator pythonOperator
-# func ini akan share information berupa name ke func lainnya dimana task dr funcnya berbeda (ex task 1 adlh func yg menerima info name dari func get_name sedangkan get_name itu ada di task2 & task 2 akan share information of name)
-# the name value from get_name share to greet with different task
-def get_name():
-    return 'badut'
 
-# kita pull nama badut (from return func get_name) ke func greet menggunakan xcom_pull
-# func ini akan running oleh dag task operator pythonOperator
-def greet(age, nameFrom_get_name):
-    # get name from task2 (the value from func get_name)
-    name = nameFrom_get_name.xcom_pull(task_id="task_2")
-    print(f"hallo world. My name {name}, age {age}")
+def get_name(ti):
+    # push multiple value melalui xcoms (publish data from xcom)
+    ti.xcom_push(key="firstname", value="badut")
+    ti.xcom_push(key="lastname", value="lucu")
+
+def greet(age, ti):
+    # (consume data from xcom)
+    firstname = ti.xcom_pull(task_id="task_2", key="firstname")
+    lastname = ti.xcom_pull(task_id="task2", key="lastname")
+    print(f"hallo world. My firstname {firstname} and lastname {lastname}, age {age}")
 with DAG(
     default_args=param,
     dag_id="dag_v1",
