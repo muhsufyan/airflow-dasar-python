@@ -10,6 +10,10 @@ param = {
 # func ini akan running oleh dag
 def greet(name, age):
     print(f"hallo world. My name {name}, age {age}")
+
+# func ini akan menerima share information berupa name dari func greet. dan func ini akan dipanggil oleh task 2 yg berbeda dg func greet (task 1)
+def get_name(name):
+    return 'badut'
 with DAG(
     default_args=param,
     dag_id="dag_v1",
