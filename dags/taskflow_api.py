@@ -17,21 +17,25 @@ default_param = {
     )
 def hello_world_etl():
     # ini didalam dag. kita akan dibuat 3 task with decorator. nama task akan == nama func
-    @task()
+    # tambah param multiple_outputs=True agar dpt consume data yg dishare
+    @task(multiple_outputs=True)
     def get_name():
-        return 'ujang'
+        return {
+            'firstname':'ujang',
+            'lastname':'sabrut'
+        }
     
     @task()
     def get_age():
         return 54
     
     @task()
-    def greet(name, age):
-        print(f"hello world, my name {name} and age {age}")
+    def greet(firstname, lastname, age):
+        print(f"hello world, my name {firstname} {lastname} and age {age}")
     # running, task dependencies. first run get_name & get_age pd 1 waktu yg sama
     # second after 2 func tsb finish lanjutkan ke greet
-    name = get_name()
+    name_dict = get_name()
     age = get_age()
-    greet = greet(name=name, age=age)
+    greet = greet(firstname=name_dict["firstname"], lastname=name_dict['lastname'], age=age)
 
 greet_dag = hello_world_etl()
