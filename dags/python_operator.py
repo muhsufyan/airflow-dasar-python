@@ -8,8 +8,8 @@ param = {
 }
 
 # func ini akan running oleh dag
-def greet():
-    print("hallo world")
+def greet(name, age):
+    print(f"hallo world. My name {name}, age {age}")
 with DAG(
     default_args=param,
     dag_id="dag_v1",
@@ -21,6 +21,8 @@ with DAG(
         task_id="task_1",
         # passing the func as param & run it
         python_callable=greet
+        # pass as param the func greet
+        op_kwargs={"name":"udin","age":32}
     )
     # task dependencies
     task1
