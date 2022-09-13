@@ -20,7 +20,7 @@ with DAG(
     task1 = PythonOperator(
         task_id="task_1",
         # passing the func as param & run it
-        python_callable=greet
+        python_callable=greet,
         # pass as param the func greet
         op_kwargs={"name":"udin","age":32}
     )
