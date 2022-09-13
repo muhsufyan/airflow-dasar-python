@@ -53,15 +53,3 @@ export AIRFLOW_HOME=.
 SET AIRFLOW_HOME=.
 # scheduler
 airflow scheduler
-
-
-# BASH OPERATOR
-airflow webserver -p 7000
-
-# if use docker, hapus container (agar dag jd kosong)
-docker-compose down -V 
-# di file docker-compose pd bagian example ubah jd false
-docker-compose up
-
-# buat file baru
-touch first_dag.py
