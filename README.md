@@ -1,29 +1,18 @@
-# Konsep dan dasar
-## workflow, dag, task, operator
-airflow adlh managemen untuk workflow<br>
-workflow adlh sequence of task (sekumpulan tugas yg berurutan/terurut)<br>
-sedangkan dlm airflow, workflow diartikan as DAG (directed acyclic graph)<br>
-dr namanya saja adlh graf yg tidk membentuk siklus, graf nya bersifat direct (1 arah)<br>
-misal ada vertex (tugas) A, stlh task A selesai maka dpt melakukan task B dan C. stlh task B selesai maka dpt melakukan task D. ingat stlh task C maka tdk akan kembali ke task A, atau stlh task D selesai maka tdk akan kembali ke task B atau bahkan ke task A & begitupun stlh task B selesai maka tdk bisa kembali ke mengerjakan task A. Maka dari itu kenapa disbt acyclic<br>
-task A upstream ke task B, task B upstream ke task D, task A upstream ke task C<br>
-sebaliknya, task D downstream ke task B, task B downstream ke task A, task C downstream ke task A<br>
-gambar 1 buah dag<br>
-ex A --> B --> D
-    |
-    |--> C
-<br> itulah konsep dari dag. now dag adlh kumpulan semua task yg akan di run, dimana setiap task dapat saling terhubung<br>
-lalu ada yg namanya operator. tujuan dari task adlh untuk mencapai "sesuatu yg kita set", metode yg digunakan untuk mencapai "sesuatu itu" disbt dg operator<br>
-DAG menggambarkan bagaimana menjlnkan (run) suatu workflow, sedangkan operator menentukan apa yg sbnrnya didpt setelah task beres (mungkin ini seprti return dlm func)<br>
-ada banyak operator diantara BashOperator (mengeksekusi perintah bash), PythonOperator (mengeksekusi kode python), CustomisedOperator<br>
-setiap task akan menerapkan operator jd pd kasus diatas misalnya, task A menerapkan operator PythonOperator, task B menerapkan operator BashOperator, dst.
-
-## execution date, task instance, dag run
-execution data adlh logical date & time which the DAG run, & its task instances, and dag run for<br>
-ex kita punya 3 dag sprti diatas dimana setiap dag akan di run pd 2023-01-01, 2023-01-02,2023-01-03<br>
-task instance is a run of a task at a specific point of time (execution_date)<br>
-task instance => (setiap task with operator) + hari ini (ex 2022-09-12)<br>
-dag run is an instantiation of a DAG, containing task instances that run for a specific execution_data<br>
-DAG run => DAG + hari ini (ex 2022-09-12)
+# Lifecycle
+ketika dag run di trigger, maka task yg ada didlmnya akan dieksekusi satu persatu.<br>
+ setiap task akan berjalan melalui stages yg berbeda mulai dari start sampai complete<br>
+ setiap stage mengindikasikan status tertentu dari suatu task instance. contoh ketika task dlm keadaan progress maka statusnya adlh running, ketika task telah selesai maka statusnya success, dst.<br>
+ terdpt 11 status stage yg ditampilkan dlm UI. warna dr setiap status stage berbeda beda<br>
+stage task yg pertama adlh early dg status dr no_status sampai ke queued (no_status, scheduled, queued), next fase eksekusi task mulai dr status running sampai succes (running, success). if task fail maka akan masuk ke status up_for_retry, upstream_failed, atau up_for_reschedule. selama lifecycle task if kita memaksa scra manual atau skip task maka task akan memasuki status shutdown atau skipped. terakhir status task nya adlh failed
+## status/stage lifecycle 
+no_status : scheduler created empty task instance (starting)<br>
+selanjutnya pd scheduler bisa terjd scheduled (scheduler determined task instance needs to be run), removed (task telah dihapus), upstream_failed (upstream task failed), atau skipped (the task is skipped)<br>
+if status scheduler adlh sheduled maka next process is "executor" next "executor" masuk ke dlm task queue sehingga statusnya berubah jd queued. stlh itu worker akan mengeksekusi task stlh free (artinya worker computation resources is not fully occupied) pd tahap ini status dr task adlh running.<br>
+stlh stage running, task bisa directed ke stage up_for_reschedule (reschedule task every certain time interval) artinya task akan direschedule setiap selang waktu tertentu (ex file existence every 10 seconds) & kembali ke scheduler<br>
+berdsrkan hasil eksekusi tsb maka terdpt 3 stage yg mungkin terjd yaitu success(task berhsl & selesai) / failed (task fail)/ shutdown (task dibatalkan/aborted)<br>
+untuk stage failed/shutdown maka task akan diulangi lagi dg masuk ke status up_for_retry (task akan dischedule ulang atau rerun the task) sehingga kembali ke fase / status /stage scheduled tp jika jumlah pengulangannya melebihi batas (ex maks pengulangan adlh 3) maka .....
+## proses eksekusi workflow yg diinginkan
+no_status => scheduler => scheduled => executor => queued => worker => running
 ## sumber https://www.youtube.com/watch?v=K9AnJ9_ZAXE
 ### ini run & success di linux
 <!-- uninstall all package with pip => pip freeze | xargs pip uninstall -y -->
