@@ -15,16 +15,10 @@ with DAG(
     # parameter
     dag_id = "first_dag",
     describe = "ini adalah deskripsi(metadata/info tambahan) dari dag pertama kita",
-     # untuk arg/param umumnya kita buat dulu dlm dict baru dimasukkan kesini
     default_args = default_param,
-    # kita tentukan pertama kali apa yg akan dilakukan oleh dag first_dag ini & sbrapa sering kita akan mengeksekusinya
-    # pertama dag akan start dr 13 september 2022 dan run setiap hari pd jam 2pm
     start_date = datetime(2022, 7, 13, 2),
     schedule_interval="@daily"
 ) as dag:
-    # kode ini dlm scope instance dag
-    # kita buat simple dag menggunakan BashOperator (untuk mengeksekusi perintah bash).
-    # task yg akan dilakukan adlh print out tulisan hello world with BashOperator
     task1 = BashOperator(
         task_id = "first_task_v2",
         bash_command="echo hello world with BashOperator"
@@ -32,8 +26,21 @@ with DAG(
     # buat task 2 yg operator nya adlh BashOperator
     task2 = BashOperator(
         task_id='task_2',
-        bash_command="i am execute/running after task 1 complete"
+        bash_command="echo execute/running after task 1 complete, running bersamaan dg task3"
     )
-    # run task (task dependencies)
-    # task2 running after task1 finish
-    task1.set_downstream(task2)
+    task3 = BashOperator(
+        task_id="task_3",
+        bash_command="echo execute/running after task 1 complete, running bersamaan dg task2"
+    )
+    # # run task (task dependencies cara 1)
+    # # task2 & task3 running scra bersamaan after task1 finish
+    # # cara 1
+    # task1.set_downstream(task2)
+    # task1.set_downstream(task3)
+
+    # # run task (task dependencies cara 2)
+    # task1 >> task2
+    # task1 >> task3
+
+    # run task (task dependencies cara 3)
+    task1 >> [task2, task3]
